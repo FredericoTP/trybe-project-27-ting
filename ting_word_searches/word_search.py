@@ -1,4 +1,18 @@
-def exists_word(word, instance):
+def dict_value(word, data, new_dict, content):
+    for index in range(len(data["linhas_do_arquivo"])):
+        if word.lower() in data["linhas_do_arquivo"][index].lower():
+            if content:
+                new_dict["ocorrencias"].append(
+                    {
+                        "linha": index + 1,
+                        "conteudo": data["linhas_do_arquivo"][index],
+                    }
+                )
+            else:
+                new_dict["ocorrencias"].append({"linha": index + 1})
+
+
+def response_value(word, instance, content):
     response = []
 
     for index in range(len(instance)):
@@ -10,31 +24,17 @@ def exists_word(word, instance):
             "ocorrencias": [],
         }
 
-        for index in range(len(data["linhas_do_arquivo"])):
-            if word.lower() in data["linhas_do_arquivo"][index].lower():
-                new_dict["ocorrencias"].append({"linha": index + 1})
+        dict_value(word, data, new_dict, content)
 
-        if len(new_dict["ocorrencias"]) != 0:
+        if new_dict["ocorrencias"]:
             response.append(new_dict)
 
     return response
 
 
+def exists_word(word, instance):
+    return response_value(word, instance, False)
+
+
 def search_by_word(word, instance):
-    """Aqui irá sua implementação"""
-
-
-# {
-#    "nome_do_arquivo": "arquivo_teste.txt",
-#    "qtd_linhas": 3,
-#    "linhas_do_arquivo": [...]
-# }
-
-
-# [
-#    {
-#        "palavra": "de",
-#        "arquivo": "arquivo_teste.txt",
-#        "ocorrencias": [{"linha": 2}, {"linha": 7}],
-#    }
-# ]
+    return response_value(word, instance, True)
